@@ -1,0 +1,25 @@
+# Use a modern LTS Node base image
+FROM node:18
+
+# Set maintainer label
+LABEL maintainer="miiro@getintodevops.com"
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# Install app dependencies (adjust to your app)
+COPY package*.json ./
+RUN npm install
+
+# Copy app source
+COPY . .
+
+# Expose the port your app runs on
+EXPOSE 8000
+
+# Health check to ensure app is running
+HEALTHCHECK --interval=5s --timeout=5s --start-period=10s --retries=3 \
+  CMD curl -f http://127.0.0.1:8000 || exit 1
+
+# Start the app
+CMD ["npm", "start"]
